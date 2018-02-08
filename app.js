@@ -9,7 +9,8 @@ const selectors = {
     timerDisplay: document.querySelector('.timer--container'),
     wordInput: document.querySelector('.word--input'),
     wordSubmit: document.querySelector('.word--submit'),
-    resultAlert: document.querySelector('.result--alert')
+    resultAlert: document.querySelector('.result--alert'),
+    resetGame: document.querySelector('.play--again')
 }
 
 const selectLetters = {
@@ -55,7 +56,7 @@ const validateInput = {
     countedLetters: {},
     userSubmit: selectors.wordSubmit.addEventListener("click", function () {
         validateInput.countInput(selectors.wordInput.value)
-        clearInterval(clock.countdown.interval)
+        clock.clear()
     }),
     countInput(word) {
         word = word.split("")
@@ -77,51 +78,85 @@ const validateInput = {
             for (let i = 0; i < usedLettersKeys.length; i++) {
                 let key = usedLettersKeys[i]
                 if (!(validateInput.countedLetters[key] <= selectLetters.countedLetters[key])) {
-                    return false
+                    return 2
                 }
             }
-            return true
+            return 1
         }
-        return false
+        return 3
     },
     checkValidWord() {
-        if (this.checkLetterFreq() === true) {
-            let word = selectors.wordInput.value.toLowerCase();
+        let code = this.checkLetterFreq()
+        let word = selectors.wordInput.value.toLowerCase();
+        if (code === 1) {
             let url = "http://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
             fetch(url)
             .then((resp) => resp.json())
             .then(function(data) {
                 if (data.length > 0) {
-                    console.log('YOU CAN SPELL')
-                    console.log(word)
-                    console.log(data[0].text)
+                    displayResults.successMessage(word, data[0].text)
                 } else {
-                    console.log('LEARN TO SPELL')
+                    displayResults.failureMessage(word, 1)
                 }
             })
             .catch(function(error) {
             console.log(error)
             });
         } else {
-            console.log('false')
+            displayResults.failureMessage(word, code)
         }
     }
 }
 
 const displayResults = {
-
+    successMessage(word, definition) {
+        selectors.resultAlert.textContent = "Well done, you managed to make a " + word.length + " letter word."
+    },
+    failureMessage(word, error) {
+        const text = selectors.resultAlert
+        // Invalid word
+        if (error === 1) {
+            text.textContent = "Uh oh, it looks like  " + word + " isn't a real word! Hit play again for another go."
+        } else if (error === 2) {
+            text.textContent = "Uh oh, it looks like you've used a letter more times than allowed! Hit play again for another go."
+        } else if (error === 3) {
+            text.textContent = "Uh oh, it looks like you've used a letter that wasn't chosen! Hit play again for another go."            
+        }
+    }
 }
 
 const clock = {
     timer: 30,
+    interval: 0,
+    clear() {      
+      clearInterval(this.interval);
+      this.timer = 30;
+      this.interval = 0;
+      selectors.timerDisplay.textContent = clock.timer
+    },
     countdown() {
-        let interval = setInterval(function () {
+        this.interval = setInterval(() => {
             selectors.timerDisplay.textContent = clock.timer
-            clock.timer--
-            if (clock.timer === -1) {
-                clearInterval(interval)
+            this.timer--;
+            console.log(this.timer)
+            if (this.timer < 0) {                
+                clearInterval(this.interval)
                 selectors.wordSubmit.click();
             }
-        }, 1000)
+        }, 1000);
+    },
+}
+
+const reset = {
+    addResetListener: selectors.resetGame.addEventListener("click", function () {
+        clock.clear()
+        reset.resetChosenLetters()
+        selectors.wordInput.value = ""
+
+    }),
+    resetChosenLetters() {
+        selectLetters.chosenLetters = []
+        selectLetters.countedLetters = {}
+        selectLetters.displayLetter(["","","","","","","","",""])
     }
 }
