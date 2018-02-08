@@ -1,6 +1,6 @@
 const letters = {
-    consonants: ["B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z"],
-    vowels: ["A", "E", "I", "O", "U"],
+    consonants: ["B", "B", "C", "C", "D", "D", "D", "D", "F", "F", "G", "G", "G", "H", "H", "J", "K", "L", "L", "L", "L", "M", "M", "N", "N", "N", "N", "N", "N", "P", "P", "Q", "R", "R", "R", "R", "R", "R", "S", "S", "S", "S", "T", "T", "T", "T", "T", "T", "V", "V", "W", "W", "X", "Y", "Y", "Z"],
+    vowels: ["A", "A", "A", "A", "A", "A", "A", "A", "A", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "I", "I", "I", "I", "I", "I", "I", "I", "I", "O", "O", "O", "O", "O", "O", "O", "O", "U", "U", "U", "U"],
 };
 const selectors = {
     letterDisplay: document.querySelector('.letter--display'),
@@ -17,10 +17,10 @@ const selectLetters = {
     chosenLetters: [],
     countedLetters: {},
     addConsListener: selectors.consButton.addEventListener("click", function () {
-        selectLetters.chooseLetter(letters.consonants, 21)
+        selectLetters.chooseLetter(letters.consonants, 56)
     }), 
     addVowelListener: selectors.vowelButton.addEventListener("click", function () {
-        selectLetters.chooseLetter(letters.vowels, 5)
+        selectLetters.chooseLetter(letters.vowels, 42)
     }),
     randomNum(num) {
         return Math.floor(Math.random() * (num));
@@ -152,11 +152,13 @@ const reset = {
         clock.clear()
         reset.resetChosenLetters()
         selectors.wordInput.value = ""
+        selectors.resultAlert.textContent = ""
 
     }),
     resetChosenLetters() {
         selectLetters.chosenLetters = []
         selectLetters.countedLetters = {}
+        validateInput.countedLetters = {}
         selectLetters.displayLetter(["","","","","","","","",""])
     }
 }
