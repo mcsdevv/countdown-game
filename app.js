@@ -10,6 +10,8 @@ const selectors = {
     wordInput: document.querySelector('.word--input'),
     wordSubmit: document.querySelector('.word--submit'),
     resultAlert: document.querySelector('.result--alert'),
+    resultWord: document.querySelector('.result--word'),
+    resultDefinition: document.querySelector('.result--definition'),
     resetGame: document.querySelector('.play--again')
 }
 
@@ -54,9 +56,15 @@ const selectLetters = {
 
 const validateInput = {
     countedLetters: {},
-    userSubmit: selectors.wordSubmit.addEventListener("click", function () {
+    userSubmitClick: selectors.wordSubmit.addEventListener("click", function () {
         validateInput.countInput(selectors.wordInput.value)
         clock.clear()
+    }),
+    userInputEnter: selectors.wordInput.addEventListener("keydown", function () {
+        if (event.key === "Enter") {
+            validateInput.countInput(selectors.wordInput.value)
+            clock.clear()
+        }
     }),
     countInput(word) {
         word = word.split("")
@@ -110,7 +118,10 @@ const validateInput = {
 
 const displayResults = {
     successMessage(word, definition) {
-        selectors.resultAlert.textContent = "Well done, you managed to make a " + word.length + " letter word."
+        word = word.charAt(0).toUpperCase() + word.slice(1)
+        selectors.resultAlert.textContent = "Well done, you managed to make a " + word.length + " letter word. Hit play again for another go."
+        selectors.resultWord.textContent = word
+        selectors.resultDefinition.textContent = definition
     },
     failureMessage(word, error) {
         const text = selectors.resultAlert
@@ -153,6 +164,8 @@ const reset = {
         reset.resetChosenLetters()
         selectors.wordInput.value = ""
         selectors.resultAlert.textContent = ""
+        selectors.resultWord.textContent = ""
+        selectors.resultDefinition.textContent = ""
 
     }),
     resetChosenLetters() {
