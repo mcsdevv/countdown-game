@@ -71,7 +71,7 @@ const validateInput = {
         selectLetters.countLetters(this.countedLetters, word)
         this.checkValidWord()
     },
-    checkValidLetters(chosenKeys, usedKeys) {
+    checkValidLetters(usedKeys) {
         for (let i = 0; i < usedKeys.length; i++) {
             if (!(usedKeys[i] in selectLetters.countedLetters)) {
                 return false
@@ -82,7 +82,7 @@ const validateInput = {
     checkLetterFreq() {
         let chosenLettersKeys = Object.keys(selectLetters.countedLetters)
         let usedLettersKeys = Object.keys(validateInput.countedLetters)
-        if (this.checkValidLetters(chosenLettersKeys, usedLettersKeys) === true) {
+        if (this.checkValidLetters(usedLettersKeys) === true) {
             for (let i = 0; i < usedLettersKeys.length; i++) {
                 let key = usedLettersKeys[i]
                 if (!(validateInput.countedLetters[key] <= selectLetters.countedLetters[key])) {
