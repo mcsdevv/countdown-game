@@ -80,8 +80,8 @@ const validateInput = {
         return true
     },
     checkLetterFreq() {
-        let chosenLettersKeys = Object.keys(selectLetters.countedLetters)
-        let usedLettersKeys = Object.keys(validateInput.countedLetters)
+        const chosenLettersKeys = Object.keys(selectLetters.countedLetters)
+        const usedLettersKeys = Object.keys(validateInput.countedLetters)
         if (this.checkValidLetters(usedLettersKeys) === true) {
             for (let i = 0; i < usedLettersKeys.length; i++) {
                 let key = usedLettersKeys[i]
@@ -94,10 +94,10 @@ const validateInput = {
         return 3
     },
     checkValidWord() {
-        let code = this.checkLetterFreq()
-        let word = selectors.wordInput.value.toLowerCase();
+        const code = this.checkLetterFreq()
+        const word = selectors.wordInput.value.toLowerCase();
         if (code === 1) {
-            let url = "http://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
+            const url = "https://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
             fetch(url)
             .then((resp) => resp.json())
             .then(function(data) {
